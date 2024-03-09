@@ -1,10 +1,11 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dz1/api_service.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_dz1/theme/theme.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+const pageSize = 10;
 
 void main() {
   runApp(MyApp());
@@ -59,9 +60,13 @@ class PostsPage extends StatefulWidget {
 }
 
 class _PostsPageState extends State<PostsPage> {
-  final List<Widget> posts = [];
+  late int _currentPage;
 
-  void toggleTheme() {}
+  @override
+  initState() {
+    super.initState();
+    _currentPage = 1;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,12 +75,17 @@ class _PostsPageState extends State<PostsPage> {
       child: Column(
         children: [
           Container(
-            color: Colors.blue,
+            color: Theme.of(context).colorScheme.primary,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
-                    onPressed: MyApp.of(context).changeTheme,
-                    child: Icon(Icons.dark_mode))
+                  onPressed: MyApp.of(context).changeTheme,
+                  child: Icon(
+                    Icons.brightness_6,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                )
               ],
             ),
           ),
@@ -83,17 +93,31 @@ class _PostsPageState extends State<PostsPage> {
             future: fetchPosts(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: CircularProgressIndicator()),
+                return Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: Center(
+                    child: SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: CircularProgressIndicator()),
+                  ),
                 );
               }
               if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
+                throw snapshot.error!;
               }
-              return Expanded(child: ListView(children: snapshot.data!));
+              return Expanded(
+                  child: ListView(
+                      children: snapshot.data!.$1 +
+                          [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: makePagination(snapshot.data!.$2),
+                              ),
+                            )
+                          ]));
             },
           ),
         ],
@@ -101,23 +125,107 @@ class _PostsPageState extends State<PostsPage> {
     ));
   }
 
-  Future<List<Widget>> fetchPosts() async {
-    final stories = await PostsPage.apiService.getStories();
+  Future<(List<Widget>, int)> fetchPosts() async {
+    final stories = await PostsPage.apiService.getStories(page: _currentPage);
     final List<Widget> posts = [];
     for (var story in stories['articles']) {
-      print(story);
       posts.add(PostBlock(
         imageUrl: story['urlToImage'],
         title: story['title'],
         post: story,
       ));
     }
-    return posts;
+    return (posts, int.parse(stories['totalResults'].toString()));
+  }
+
+  List<Widget> makePagination(int count) {
+    ButtonStyle pressedButton = ButtonStyle(
+        backgroundColor:
+            MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
+        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+            side: BorderSide(
+                color: Theme.of(context).colorScheme.primary, width: 1),
+            borderRadius: BorderRadius.circular(10))));
+
+    ButtonStyle buttonStyle = ButtonStyle(
+        backgroundColor:
+            MaterialStateProperty.all(Theme.of(context).colorScheme.background),
+        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+            side: BorderSide(
+                color: Theme.of(context).colorScheme.primary, width: 1),
+            borderRadius: BorderRadius.circular(10))));
+
+    List<Widget> pages = [];
+    pages.add(Flexible(
+      child: TextButton(
+        style: buttonStyle,
+        onPressed: () {
+          if (_currentPage > 1) {
+            setState(() {
+              _currentPage = _currentPage - 1;
+            });
+          }
+        },
+        child: Icon(Icons.arrow_left),
+      ),
+    ));
+    pages.add(SizedBox(
+      width: 10,
+    ));
+    for (var i = 0; i < count / pageSize; i++) {
+      if (i + 1 == _currentPage) {
+        pages.add(Flexible(
+          child: TextButton(
+              style: pressedButton,
+              onPressed: () {
+                setState(() {
+                  _currentPage = i + 1;
+                });
+              },
+              child: Text(
+                (i + 1).toString(),
+                style: TextStyle(color: Theme.of(context).colorScheme.primary),
+              )),
+        ));
+      } else {
+        pages.add(Flexible(
+          child: TextButton(
+              style: buttonStyle,
+              onPressed: () {
+                setState(() {
+                  _currentPage = i + 1;
+                });
+              },
+              child: Text(
+                (i + 1).toString(),
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.secondary),
+              )),
+        ));
+      }
+      pages.add(SizedBox(
+        width: 10,
+      ));
+    }
+    pages.add(Flexible(
+      child: TextButton(
+        style: buttonStyle,
+        onPressed: () {
+          if (_currentPage < count / pageSize) {
+            setState(() {
+              _currentPage = _currentPage + 1;
+            });
+          }
+        },
+        child: Icon(Icons.arrow_right),
+      ),
+    ));
+    return pages;
   }
 }
 
 class SinglePostPage extends StatelessWidget {
-  final Object? post;
+  final Map post;
 
   const SinglePostPage({super.key, required this.post});
 
@@ -128,7 +236,7 @@ class SinglePostPage extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            color: Colors.blue,
+            color: Theme.of(context).colorScheme.primary,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -137,23 +245,74 @@ class SinglePostPage extends StatelessWidget {
                       Navigator.pop(context);
                     },
                     icon: Icon(Icons.arrow_left),
-                    label: Text('Bababa'),
+                    label: Text('Назад'),
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent,
                         foregroundColor: Colors.black,
                         elevation: 0,
                         shadowColor: Colors.transparent)),
-                Container(
-                    child: TextButton(
-                  child: Icon(Icons.dark_mode),
+                TextButton(
                   onPressed: MyApp.of(context).changeTheme,
-                ))
+                  child: Icon(
+                    Icons.brightness_6,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                )
               ],
             ),
-          )
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Text(post['title'],
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: post['urlToImage'] != null
+                      ? Image.network(post['urlToImage']!, errorBuilder:
+                          (BuildContext context, Object exception,
+                              StackTrace? stackTrace) {
+                          return Image.asset("assets/mock.png");
+                        })
+                      : Image.asset("assets/mock.png"),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                post['content'] != null
+                    ? Text(post['content'])
+                    : Text(
+                        "API для этой новости не вернул никакого содержания. Ознакомтесь с полной новостью по нажав на кнопку снизу."),
+                SizedBox(
+                  height: 10,
+                ),
+                ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).colorScheme.primary),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            side: BorderSide(
+                                color: Theme.of(context).colorScheme.secondary,
+                                width: 1),
+                            borderRadius: BorderRadius.circular(10)))),
+                    onPressed: _launchURL,
+                    child: Text("Читать полностью",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ))),
+              ],
+            ),
+          ),
         ],
       ),
     ));
+  }
+
+  _launchURL() async {
+    final url = post['url'];
+    await launchUrl(Uri.parse(url));
   }
 }
 
@@ -181,7 +340,7 @@ class PostBlock extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-              child: Container(
+              child: SizedBox(
                 width: 150,
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
@@ -200,7 +359,7 @@ class PostBlock extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Container(child: Text(title)),
+                    Text(title),
                     Align(
                       alignment: Alignment.bottomRight,
                       child: SizedBox(
@@ -208,8 +367,8 @@ class PostBlock extends StatelessWidget {
                         height: 30,
                         child: ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.blue),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).colorScheme.primary),
                               shape: MaterialStateProperty.all(
                                   RoundedRectangleBorder(
                                       side: BorderSide(
@@ -226,6 +385,7 @@ class PostBlock extends StatelessWidget {
                           onPressed: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
+                              print(post);
                               return SinglePostPage(post: post);
                             }));
                           },
