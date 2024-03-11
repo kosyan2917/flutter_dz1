@@ -1,5 +1,5 @@
 # Что это
-Это приложение, которое берет данные с newsapi.org и выводит их в виде списка новостей.
+Это приложение, которое берет данные с newsapi.org и выводит их в виде списка новостей. Скачать можно по ссылке: [app-release.apk](https://raw.githubusercontent.com/kosyan2917/flutter_dz1/master/app-release.apk)
 
 ## Функциональность
 
@@ -16,4 +16,4 @@
 Новость светлая тема             |  Новость темная тема
 :-------------------------:|:-------------------------:
 ![](screenshots/post_light.png)  |  ![](screenshots/post_dark.png)
-Скачать можно по ссылке: [app-release.apk](https://raw.githubusercontent.com/kosyan2917/flutter_dz1/master/app-release.apk)
+
