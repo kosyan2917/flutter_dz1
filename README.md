@@ -1,16 +1,18 @@
-# flutter_dz1
+# Что это
+Это приложение, которое берет данные с newsapi.org и выводит их в виде списка новостей.
 
-A new Flutter project.
+## Функциональность
 
-## Getting Started
+- Получение списка новостей
+- Просмотр новости
+- Возможность перейти к полной новости на сайте источника
+- Поддержка светлой и темной темы
 
-This project is a starting point for a Flutter application.
+Ниже представлены скриншоты приложения:
 
-A few resources to get you started if this is your first Flutter project:
+![Главный_экран_светлая тема](screenshots/main_light.png)
+![Главный_экран_темная тема](screenshots/main_dark.png)
+![Новость_светлая тема](screenshots/post_light.png)
+![Новость_темная тема](screenshots/post_dark.png)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Скачать можно по ссылке: [app-release.apk](build/app/outputs/flutter-apk/app-release.apk)

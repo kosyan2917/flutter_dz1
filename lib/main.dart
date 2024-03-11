@@ -38,7 +38,7 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Naviation Demo',
+      title: 'News Dz',
       theme: getTheme(),
       home: PostsPage(
         isDark: _isDark,
