@@ -12,4 +12,8 @@
 Главное меню светлая тема             |  Главное меню темная тема
 :-------------------------:|:-------------------------:
 ![](screenshots/main_light.png)  |  ![](screenshots/main_dark.png)
+
+Новость светлая тема             |  Новость темная тема
+:-------------------------:|:-------------------------:
+![](screenshots/post_light.png)  |  ![](screenshots/post_dark.png)
 Скачать можно по ссылке: [app-release.apk](https://raw.githubusercontent.com/kosyan2917/flutter_dz1/master/app-release.apk)
