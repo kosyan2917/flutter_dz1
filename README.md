@@ -9,5 +9,7 @@
 - Поддержка светлой и темной темы
 
 Ниже представлены скриншоты приложения:
-<img src="./screenshots/main_dark.png">
+Главное меню светлая тема             |  Главное меню темная тема
+:-------------------------:|:-------------------------:
+![](screenshots/main_light.png)  |  ![](screenshots/main_dark.png)
 Скачать можно по ссылке: [app-release.apk](https://raw.githubusercontent.com/kosyan2917/flutter_dz1/master/app-release.apk)
