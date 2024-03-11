@@ -15,4 +15,4 @@
 ![Новость_светлая тема](screenshots/post_light.png)
 ![Новость_темная тема](screenshots/post_dark.png)
 
-Скачать можно по ссылке: [app-release.apk](app-release.apk)
+Скачать можно по ссылке: [app-release.apk](https://raw.githubusercontent.com/kosyan2917/flutter_dz1/master/app-release.apk)
