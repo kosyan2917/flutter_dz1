@@ -11,7 +11,7 @@ const pageSize = 10;
 
 void main() {
   runApp(ProviderScope(
-      child: MyApp(apiProvider: PostProvider(const APIService()))));
+      child: MyApp(apiProvider: PostProvider(NewsApiService()))));
 }
 
 class MyApp extends ConsumerWidget {
