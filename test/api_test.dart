@@ -3,7 +3,6 @@ import 'package:flutter_dz1/data/models/news_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_dz1/domain/providers/post_provider.dart';
 
-
 void main() {
   group('PostProvider', () {
     test('getPosts returns a list of posts and total results', () async {

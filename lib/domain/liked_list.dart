@@ -2,25 +2,20 @@ import 'package:riverpod/riverpod.dart';
 
 import '../data/models/news_model.dart';
 
-
 class LikedList extends Notifier<List<Post>> {
-
   @override
   List<Post> build() {
     return [];
   }
 
   void add(Post post) {
-
-    state = [
-      ...state,
-      post
-    ];
+    state = [...state, post];
   }
 
   void remove(Post post) {
     state = [
-      for (final p in state) if (p.title != post.title) p,
+      for (final p in state)
+        if (p.title != post.title) p,
     ];
   }
 
@@ -32,4 +27,5 @@ class LikedList extends Notifier<List<Post>> {
   }
 }
 
-final likedListProvider = NotifierProvider<LikedList, List<Post>>(LikedList.new);
+final likedListProvider =
+    NotifierProvider<LikedList, List<Post>>(LikedList.new);

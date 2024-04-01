@@ -5,7 +5,6 @@ import 'package:flutter_dz1/domain/api_provider.dart';
 const int pageSize = 10;
 
 class PostProvider implements APIProvider {
-
   final APIService apiService;
 
   PostProvider(this.apiService);
@@ -25,5 +24,4 @@ class PostProvider implements APIProvider {
     }
     return (result, int.parse(stories['totalResults'].toString()));
   }
-
 }

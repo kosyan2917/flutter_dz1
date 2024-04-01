@@ -9,9 +9,9 @@ class PostBlock extends StatelessWidget {
 
   const PostBlock(
       {super.key,
-        required this.imageUrl,
-        required this.title,
-        required this.post});
+      required this.imageUrl,
+      required this.title,
+      required this.post});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,8 @@ class PostBlock extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
               child: SizedBox(
                 width: 150,
                 height: 100,
@@ -33,10 +34,10 @@ class PostBlock extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8.0),
                     child: imageUrl != null
                         ? Image.network(imageUrl!, errorBuilder:
-                        (BuildContext context, Object exception,
-                        StackTrace? stackTrace) {
-                      return Image.asset("assets/mock.png");
-                    })
+                            (BuildContext context, Object exception,
+                                StackTrace? stackTrace) {
+                            return Image.asset("assets/mock.png");
+                          })
                         : Image.asset("assets/mock.png")),
               ),
             ),
@@ -64,7 +65,7 @@ class PostBlock extends StatelessWidget {
                                               .secondary,
                                           width: 1),
                                       borderRadius:
-                                      BorderRadius.circular(10)))),
+                                          BorderRadius.circular(10)))),
                           child: Text("Читать",
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.secondary,
@@ -72,8 +73,8 @@ class PostBlock extends StatelessWidget {
                           onPressed: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                                  return SinglePostPage(post: post);
-                                }));
+                              return SinglePostPage(post: post);
+                            }));
                           },
                         ),
                       ),

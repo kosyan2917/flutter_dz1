@@ -10,8 +10,8 @@ import 'UI/posts_page.dart';
 const pageSize = 10;
 
 void main() {
-  runApp(ProviderScope(
-      child: MyApp(apiProvider: PostProvider(NewsApiService()))));
+  runApp(
+      ProviderScope(child: MyApp(apiProvider: PostProvider(NewsApiService()))));
 }
 
 class MyApp extends ConsumerWidget {

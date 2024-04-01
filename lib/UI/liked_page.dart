@@ -37,12 +37,12 @@ class LikedPage extends ConsumerWidget {
           ),
           Expanded(
               child: ListView(
-                children: [
-                  for (final post in likedPosts)
-                    PostBlock(imageUrl: post.imageUrl, title: post.title, post: post)
-                ],
-              )
-          )
+            children: [
+              for (final post in likedPosts)
+                PostBlock(
+                    imageUrl: post.imageUrl, title: post.title, post: post)
+            ],
+          ))
         ],
       )),
     );

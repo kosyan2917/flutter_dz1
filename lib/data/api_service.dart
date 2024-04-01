@@ -4,7 +4,6 @@ import 'secrets.dart';
 
 abstract class APIService {
   Future<dynamic> getStories(int page);
-
 }
 
 class NewsApiService implements APIService {
@@ -19,7 +18,6 @@ class NewsApiService implements APIService {
 }
 
 class MockApiService implements APIService {
-
   @override
   Future<dynamic> getStories(int page) async {
     return {
@@ -34,5 +32,4 @@ class MockApiService implements APIService {
       'totalResults': 'b'
     };
   }
-
 }

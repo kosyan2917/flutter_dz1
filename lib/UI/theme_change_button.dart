@@ -19,5 +19,4 @@ class ThemeChangeButton extends ConsumerWidget {
       ),
     );
   }
-
 }
